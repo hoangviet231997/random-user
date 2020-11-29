@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/random-user', 'IndexController@index')->middleware('check.link');
+Route::get('/', 'IndexController@index')->middleware('check.link');
 
 Route::get('/import-excel', 'MyController@ImportExcel');
 Route::post('/users', 'UserController@store');

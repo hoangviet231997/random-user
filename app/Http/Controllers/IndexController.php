@@ -20,7 +20,7 @@ class IndexController extends Controller
         $encode = $this->request->id;
         $check_code = DB::table('users')->where('encode', $encode)->count();
 
-        if ($check_code > 0) {
+        // if ($check_code > 0) {
 
             // guests (100 request)
 
@@ -52,7 +52,7 @@ class IndexController extends Controller
                     'date_prize_3' => DB::table('prizes')->where('id', 3)->select('date_start', 'id')->get(),
                 ]
             );
-        }
+        // }
     }
 
     public function setting()

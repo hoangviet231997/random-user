@@ -77,7 +77,6 @@
 
     <script>
         var user = [];
-
         axios.get('/users').then((res) => {
             user = res.data;
         }).catch((err) => {});
@@ -86,23 +85,42 @@
             axios.get('/users').then((res) => {
                 user = res.data;
             }).catch((err) => {});
-        }, 3000);
-
-        var ran_list;
-        var ran_num;
+        }, 2500);
 
         let userPrize = [];
         setInterval(() => {
             axios.get('/get-user-prize').then((res) => {
                 userPrize = res.data;
             }).catch((err) => {});
-        }, 2000);
+        }, 2500);
+
+        setInterval(() => {
+            axios.get('/get-all-user-prize').then((res) => {
+                console.log('data_prize');
+                let data = res.data;
+                let tr = '';
+                data.map((e, i) => {
+                    tr += `
+                            <tr>
+                                <td>${i + 1}</td>
+                                <td>${e.code}</td>
+                                <td>${e.username}</td>
+                                <td>${e.prize_name}</td>
+                            </tr>
+                        `;
+                });
+                $('#user_lucky').html(tr);
+            }).catch((err) => {
+                console.error(err);
+            });
+        }, 2500);
 
         let date_prize_1 = "<?php echo $date_prize_1[0]->date_start; ?>";
         let date_prize_2 = "<?php echo $date_prize_2[0]->date_start; ?>";
         let date_prize_3 = "<?php echo $date_prize_3[0]->date_start; ?>";
 
         let arr = [];
+        var ran_num;
 
         function randomNumber() {
             ran_num = setInterval(() => {
@@ -118,7 +136,8 @@
                 } else if (now >= date_prize_3 && userPrize.consolation.length < 10) {
                     console.log(3);
                     document.getElementById("random").innerHTML = user[index].code;
-                } else if (userPrize.first.length > 4 && userPrize.runner_up.length > 6 && userPrize.consolation.length > 9) {
+                } else if (userPrize.first.length > 4 && userPrize.runner_up.length > 6 && userPrize.consolation
+                    .length > 9) {
                     console.log(4);
                     for (let i = 0; i < arr.length; i++) {
                         clearInterval(arr[i]);
@@ -131,7 +150,6 @@
 
         randomNumber();
 
-
         var ran_prize_1 = setInterval(() => {
             let now = moment().format('YYYY-MM-DD HH:mm');
             let date_prize_1 = "<?php echo $date_prize_1[0]->date_start; ?>";
@@ -141,36 +159,28 @@
             var code = user[index].code;
             var nameUser = user[index].username;
 
-            if (now >= date_prize_1 && userPrize.first.length < 5) {
-                console.log('now >= date_prize_1 && userPrize.first.length < 5');
+            if (now >= date_prize_1) {
+                console.log('now >= date_prize_1');
+
+                if (userPrize.first.length > 4) {
+                    console.log('userPrize.first clear');
+                    clearInterval(ran_prize_1);
+                    clearInterval(ran_num);
+                    document.getElementById("random").innerHTML = '000000';
+                }
+
                 document.getElementById("name_prize").innerHTML = 'First Prize';
                 axios.post('/users', {
                     code: code,
                     prize_id: id_prize_1
                 }).then(function(response) {
-                    let data_store = response.data;
-                    let tr = '';
-                    data_store.map((e, i) => {
-                        tr += `
-                                <tr>
-                                    <td>${i + 1}</td>
-                                    <td>${e.code}</td>
-                                    <td>${e.username}</td>
-                                    <td>${e.prize_name}</td>
-                                </tr>
-                        `;
-                    });
-                    $('#user_lucky').html(tr);
+                    console.log('prize_1 save ok');
                 }).catch(function(error) {
                     console.log(error);
                 });
-            } else if (userPrize.first.length > 4) {
-                console.log('userPrize.first clear');
-                clearInterval(ran_prize_1);
-                clearInterval(ran_num);
-                document.getElementById("random").innerHTML = '000000';
             }
-        }, 3000);
+
+        }, 10000);
 
         randomNumber();
 
@@ -183,38 +193,28 @@
             var code = user[index].code;
             var nameUser = user[index].username;
 
-            if (now >= date_prize_2 && userPrize.runner_up.length < 7) {
+            if (now >= date_prize_2) {
+                console.log('now >= date_prize_2');
+                if (userPrize.runner_up.length > 6) {
+                    console.log('userPrize.runner_up clear');
+                    clearInterval(ran_prize_2);
+                    clearInterval(ran_num);
+                    document.getElementById("random").innerHTML = '000000';
+                }
+
                 document.getElementById("name_prize").innerHTML = 'Runner Up Prize';
                 axios.post('/users', {
                     code: code,
                     prize_id: id_prize_2
                 }).then(function(response) {
-                    let data_store = response.data;
-                    let tr = '';
-                    data_store.map((e, i) => {
-                        tr += `
-                                <tr>
-                                    <td>${i + 1}</td>
-                                    <td>${e.code}</td>
-                                    <td>${e.username}</td>
-                                    <td>${e.prize_name}</td>
-                                </tr>
-                        `;
-                    });
-                    $('#user_lucky').html(tr);
-                    // user.splice(index, 1);
+                    console.log('prize_2 ok');
                 }).catch(function(error) {
                     console.log(error);
                 });
             }
 
-            if (userPrize.runner_up.length > 6) {
-                console.log('userPrize.runner_up clear');
-                clearInterval(ran_prize_2);
-                clearInterval(ran_num);
-                document.getElementById("random").innerHTML = '000000';
-            }
-        }, 3000);
+
+        }, 10000);
 
         var ran_prize_3 = setInterval(() => {
             let now = moment().format('YYYY-MM-DD HH:mm');
@@ -225,37 +225,27 @@
             var code = user[index].code;
             var nameUser = user[index].username;
 
-            if (now >= date_prize_3 && userPrize.consolation.length < 10) {
+            if (now >= date_prize_3) {
+                console.log('now >= date_prize_3');
+
+                if (userPrize.consolation.length > 9) {
+                    console.log('userPrize.consolation clear');
+                    clearInterval(ran_prize_3);
+                    clearInterval(ran_num);
+                    document.getElementById("random").innerHTML = '000000';
+                }
+
                 document.getElementById("name_prize").innerHTML = 'Consolation Prize';
                 axios.post('/users', {
                     code: code,
                     prize_id: id_prize_3
                 }).then(function(response) {
-                    let data_store = response.data;
-                    let tr = '';
-                    data_store.map((e, i) => {
-                        tr += `
-                                <tr>
-                                    <td>${i + 1}</td>
-                                    <td>${e.code}</td>
-                                    <td>${e.username}</td>
-                                    <td>${e.prize_name}</td>
-                                </tr>
-                        `;
-                    });
-                    $('#user_lucky').html(tr);
-                    // user.splice(index, 1);
+                    console.log('prize_3 ok');
                 }).catch(function(error) {
                     console.log(error);
                 });
             }
-            if (userPrize.consolation.length > 9) {
-                console.log('userPrize.consolation clear');
-                clearInterval(ran_prize_3);
-                clearInterval(ran_num);
-                document.getElementById("random").innerHTML = '000000';
-            }
-        }, 3000);
+        }, 10000);
 
     </script>
 </body>
