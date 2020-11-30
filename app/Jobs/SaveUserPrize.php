@@ -40,7 +40,7 @@ class SaveUserPrize implements ShouldQueue
     public function storePrize1($prize_id, $code)
     {
         $user_prize_first = User::where('prize_id', $prize_id)->get();
-        if (count($user_prize_first) < 5) {
+        if (count($user_prize_first) < 1) {
             $user = User::where('code', $code)->first();
             if ($user) {
                 $user->prize_id = $prize_id;
@@ -70,7 +70,7 @@ class SaveUserPrize implements ShouldQueue
     public function storePrize2($prize_id, $code)
     {
         $user_prize_second = User::where('prize_id', $prize_id)->get();
-        if (count($user_prize_second) < 7) {
+        if (count($user_prize_second) < 2) {
             $user = User::where('code', $code)->first();
             if ($user) {
                 $user->prize_id = $prize_id;

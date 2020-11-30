@@ -127,17 +127,16 @@
                 let now = moment().format('YYYY-MM-DD HH:mm');
                 let index = random(99, 00);
 
-                if (now >= date_prize_1 && userPrize.first.length < 5) {
+                if (now >= date_prize_1 && userPrize.first.length < 1) {
                     console.log(1);
                     document.getElementById("random").innerHTML = user[index].code;
-                } else if (now >= date_prize_2 && userPrize.runner_up.length < 7) {
+                } else if (now >= date_prize_2 && userPrize.runner_up.length < 2) {
                     console.log(2);
                     document.getElementById("random").innerHTML = user[index].code;
                 } else if (now >= date_prize_3 && userPrize.consolation.length < 10) {
                     console.log(3);
                     document.getElementById("random").innerHTML = user[index].code;
-                } else if (userPrize.first.length > 4 && userPrize.runner_up.length > 6 && userPrize.consolation
-                    .length > 9) {
+                } else if (userPrize.first.length > 0 && userPrize.runner_up.length > 1 && userPrize.consolation.length > 9) {
                     console.log(4);
                     for (let i = 0; i < arr.length; i++) {
                         clearInterval(arr[i]);
@@ -162,7 +161,7 @@
             if (now >= date_prize_1) {
                 console.log('now >= date_prize_1');
 
-                if (userPrize.first.length > 4) {
+                if (userPrize.first.length > 0) {
                     console.log('userPrize.first clear');
                     clearInterval(ran_prize_1);
                     clearInterval(ran_num);
@@ -195,7 +194,7 @@
 
             if (now >= date_prize_2) {
                 console.log('now >= date_prize_2');
-                if (userPrize.runner_up.length > 6) {
+                if (userPrize.runner_up.length > 1) {
                     console.log('userPrize.runner_up clear');
                     clearInterval(ran_prize_2);
                     clearInterval(ran_num);
